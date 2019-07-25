@@ -1,6 +1,6 @@
-package Client;
+package client;
 
-import Common.*;
+import common.*;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,8 +14,11 @@ import javafx.scene.layout.VBox;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -50,6 +53,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         Network.start();
         status.setFocusTraversable(false);
         loginField.setFocusTraversable(true);
@@ -59,7 +63,22 @@ public class MainController implements Initializable {
                     AbstractMessage am = Network.readObject();
                     if (am instanceof FileMessage) {
                         FileMessage fm = (FileMessage) am;
-                        Files.write(Paths.get("client_storage/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE);
+                        Path path = Paths.get("client_storage/" + fm.getFilename());
+                        if (!Files.exists(path)) {
+                            Files.write(Paths.get("client_storage/" + fm.getFilename()), fm.getData(), StandardOpenOption.CREATE_NEW);
+                       } else{
+                            int count = 1;
+                            while (true) {
+                                String[] strings = fm.getFilename().split("");
+                                String title = nameBuilder(strings, count);
+                                Path name = Paths.get("client_storage/" + title);
+                                if (Files.exists(name)) count++;
+                                else {
+                                    Files.write(Paths.get("client_storage/" + title), fm.getData(), StandardOpenOption.CREATE);
+                                    break;
+                                }
+                            }
+                        }
                         refreshLocalFilesList();
                     }
                     if (am instanceof Command){
@@ -99,14 +118,19 @@ public class MainController implements Initializable {
     }
 
     public void pressOnDownloadBtn(ActionEvent actionEvent) {
-        Network.sendMsg(new FileRequest(serverFilesList.getSelectionModel().getSelectedItem()));
+        if (serverFilesList.getSelectionModel().getSelectedItem() != null) {
+            Network.sendMsg(new FileRequest(serverFilesList.getSelectionModel().getSelectedItem()));
+        }
     }
 
     public void pressOnUploadBtn(ActionEvent actionEvent) {
-        try {
-            Network.sendMsg(new FileMessage(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem())));
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (clientFilesList.getSelectionModel().getSelectedItem() != null) {
+            try {
+                FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem()));
+                if (fm.getData().length <= 2146435072) Network.sendMsg(fm);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -124,23 +148,27 @@ public class MainController implements Initializable {
     private void refreshCloudFilesList(List<String> files) {
         updateUI(() -> {
             serverFilesList.getItems().clear();
-            for (String s: files) {
+            for (String s : files) {
                 serverFilesList.getItems().add(s);
             }
         });
     }
 
     public void clientDelete(ActionEvent actionEvent) {
-        try {
-            Files.delete(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem()));
-            refreshLocalFilesList();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (clientFilesList.getSelectionModel().getSelectedItem() != null) {
+            try {
+                Files.delete(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem()));
+                refreshLocalFilesList();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     public void serverDelete(ActionEvent actionEvent) {
-        Network.sendMsg(new Command("del", serverFilesList.getSelectionModel().getSelectedItem()));
+        if (serverFilesList.getSelectionModel().getSelectedItem() != null) {
+            Network.sendMsg(new Command("del", serverFilesList.getSelectionModel().getSelectedItem()));
+        }
     }
 
     private static void updateUI(Runnable r) {
@@ -171,5 +199,15 @@ public class MainController implements Initializable {
         startNode.setManaged(true);
         rootNode.setVisible(false);
         rootNode.setManaged(false);
+    }
+
+    private String nameBuilder(String[] strings, int count){
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(strings));
+        arrayList.add(arrayList.size()-4, "(" + count + ")");
+        StringBuilder builder = new StringBuilder(arrayList.size());
+        for(String s: arrayList) {
+            builder.append(s);
+        }
+        return builder.toString();
     }
 }

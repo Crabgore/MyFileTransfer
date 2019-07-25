@@ -9,27 +9,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);"
+<VBox style="-fx-background-color: linear-gradient(#fff 0%, #eee 10%, #ddd 90%, #bbb 100%);"
       xmlns="http://javafx.com/javafx/8.0.172-ea"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Client.MainController"
+      fx:controller="client.MainController"
       maxHeight="Infinity"
       maxWidth="Infinity">
     <HBox fx:id="rootNode" VBox.vgrow="ALWAYS" managed="false" visible="false" maxHeight="Infinity" prefWidth="Infinity">
         <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
+            <HBox alignment="CENTER">
+                <Text text="Ваши локальные файлы" textAlignment="CENTER" />
+            </HBox>
             <ListView fx:id="clientFilesList" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
-            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
-                <Button contentDisplay="RIGHT" onAction="#pressOnUploadBtn" text="Отправить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Button onAction="#clientDelete" prefWidth="85.0" text="Удалить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-                <Button alignment="CENTER" contentDisplay="CENTER" onAction="#exit" text="Выйти" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+            <HBox HBox.hgrow="ALWAYS" VBox.vgrow="NEVER" maxWidth="Infinity" maxHeight="Infinity">
+                <Button onAction="#pressOnUploadBtn" text="Отправить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button onAction="#clientDelete" text="Удалить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+                <Button onAction="#exit" text="Выйти" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #DC143C"/>
           </HBox>
        </VBox>
        <VBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
+           <HBox alignment="CENTER">
+               <Text text="Ваши файлы в облаке" textAlignment="CENTER" />
+           </HBox>
            <ListView fx:id="serverFilesList" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" />
-           <HBox HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS" maxWidth="Infinity" maxHeight="Infinity">
-               <Button onAction="#pressOnDownloadBtn" text="Скачать" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-               <Button onAction="#serverDelete" prefWidth="85.0" text="Удалить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
-               <Button onAction="#exit" prefWidth="85.0" text="Выйти" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+           <HBox HBox.hgrow="ALWAYS" VBox.vgrow="NEVER" maxWidth="Infinity" maxHeight="Infinity">
+               <Button onAction="#pressOnDownloadBtn" text="Скачать" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity" />
+               <Button onAction="#serverDelete" text="Удалить" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+               <Button onAction="#exit" text="Выйти" VBox.vgrow="ALWAYS" HBox.hgrow="ALWAYS" maxWidth="Infinity" style="-fx-background-color: #DC143C"/>
           </HBox>
       </VBox>
     </HBox>

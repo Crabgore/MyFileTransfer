@@ -1,4 +1,4 @@
-package Common;
+package common;
 
 public class UserInfo extends AbstractMessage {
     private String userInfo;

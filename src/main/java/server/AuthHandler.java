@@ -1,7 +1,7 @@
-package Server;
+package server;
 
-import Common.Command;
-import Common.UserInfo;
+import common.Command;
+import common.UserInfo;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 import java.sql.*;
 
 public class AuthHandler extends ChannelInboundHandlerAdapter {
-    private boolean authOk = false;
 
     private static Connection connection;
     private static Statement stmt;
@@ -30,7 +29,6 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
                 " VALUES ('%s', '%s')", login, pass.hashCode());
         try {
             stmt.execute(sql);
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -86,11 +84,6 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         UserInfo userInfo = (UserInfo) msg;
         String[] strings = userInfo.getUserInfo().split(" ");
 
-        if (authOk){
-            ctx.fireChannelRead(msg);
-            return;
-        }
-
         if (strings[0].equals("/addUser")){
             connect();
             if (checkLogin(strings[1])){
@@ -108,7 +101,6 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
         if (strings[0].equals("/auth")){
             connect();
             if (userInfo(strings[1], strings[2])){
-                authOk = true;
                 ctx.pipeline().addLast(new MainHandler(strings[1]));
                 Command cmd = new Command("authOk");
                 ctx.writeAndFlush(cmd);

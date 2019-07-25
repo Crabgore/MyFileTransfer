@@ -1,6 +1,6 @@
-package Client;
+package client;
 
-import Common.AbstractMessage;
+import common.AbstractMessage;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 
@@ -16,7 +16,7 @@ class Network {
         try {
             socket = new Socket("localhost", 8189);
             out = new ObjectEncoderOutputStream(socket.getOutputStream());
-            in = new ObjectDecoderInputStream(socket.getInputStream(), 50 * 1024 * 1024);
+            in = new ObjectDecoderInputStream(socket.getInputStream(), 1024 * 1024 * 2047);
         } catch (IOException e) {
             e.printStackTrace();
         }

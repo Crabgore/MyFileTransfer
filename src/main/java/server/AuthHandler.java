@@ -37,7 +37,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     private static boolean checkLogin(String login){
         String check = String.format("SELECT login from main" +
                 " WHERE login = '%s'", login);
-        ResultSet rs = null;
+        ResultSet rs;
         try {
             rs = stmt.executeQuery(check);
             if (rs.next()) {
@@ -55,7 +55,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
 
         int myHash = pass.hashCode();
 
-        ResultSet rs = null;
+        ResultSet rs;
         try {
             rs = stmt.executeQuery(sql);
             if (rs.next()) {
@@ -114,7 +114,7 @@ public class AuthHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
     }

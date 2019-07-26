@@ -2,7 +2,6 @@ package client;
 
 import common.*;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -117,13 +116,13 @@ public class MainController implements Initializable {
         t.start();
     }
 
-    public void pressOnDownloadBtn(ActionEvent actionEvent) {
+    public void pressOnDownloadBtn() {
         if (serverFilesList.getSelectionModel().getSelectedItem() != null) {
             Network.sendMsg(new FileRequest(serverFilesList.getSelectionModel().getSelectedItem()));
         }
     }
 
-    public void pressOnUploadBtn(ActionEvent actionEvent) {
+    public void pressOnUploadBtn() {
         if (clientFilesList.getSelectionModel().getSelectedItem() != null) {
             try {
                 FileMessage fm = new FileMessage(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem()));
@@ -154,7 +153,7 @@ public class MainController implements Initializable {
         });
     }
 
-    public void clientDelete(ActionEvent actionEvent) {
+    public void clientDelete() {
         if (clientFilesList.getSelectionModel().getSelectedItem() != null) {
             try {
                 Files.delete(Paths.get("client_storage/" + clientFilesList.getSelectionModel().getSelectedItem()));
@@ -165,7 +164,7 @@ public class MainController implements Initializable {
         }
     }
 
-    public void serverDelete(ActionEvent actionEvent) {
+    public void serverDelete() {
         if (serverFilesList.getSelectionModel().getSelectedItem() != null) {
             Network.sendMsg(new Command("del", serverFilesList.getSelectionModel().getSelectedItem()));
         }
@@ -179,21 +178,21 @@ public class MainController implements Initializable {
         }
     }
 
-    public void pressOnLogin(ActionEvent actionEvent) {
+    public void pressOnLogin() {
         if (loginField.getText().equals("")|| passField.getText().equals("")) {
             status.setText("Введите логи и пароль");
         } else
             Network.sendMsg(new UserInfo("/auth" + " " + loginField.getText() + " " + passField.getText()));
     }
 
-    public void pressOnRegister(ActionEvent actionEvent) {
+    public void pressOnRegister() {
         if (loginField.getText().equals("")|| passField.getText().equals("")){
             status.setText("Введите логи и пароль");
         } else
             Network.sendMsg(new UserInfo("/addUser" + " " + loginField.getText() + " " + passField.getText()));
     }
 
-    public void exit(ActionEvent actionEvent) {
+    public void exit() {
         Network.sendMsg(new Command("exit"));
         startNode.setVisible(true);
         startNode.setManaged(true);

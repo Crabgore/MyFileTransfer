@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainHandler extends ChannelInboundHandlerAdapter {
-    private String userName = null;
+    private String userName;
     private String storage = null;
     private List<String> results = new ArrayList<>();
 
@@ -103,7 +103,7 @@ public class MainHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
     }

@@ -21,7 +21,7 @@ public class Server {
             b.group(mainGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
-                        protected void initChannel(SocketChannel socketChannel) throws Exception {
+                        protected void initChannel(SocketChannel socketChannel) {
                             socketChannel.pipeline().addLast(
                                     new ObjectDecoder(1024 * 1024 * 2047, ClassResolvers.cacheDisabled(null)),
                                     new ObjectEncoder(),
